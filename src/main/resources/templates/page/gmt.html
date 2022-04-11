@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/main-layout}">
+<body class="u-black u-body u-xl-mode">
+<div layout:fragment="content">
+    <div class="login-box">
+        <h1>Welcome, Traders</h1>
+        <p>Seems like our website is not feeling well today</p>
+        <p>but don't worry, you can still trading</p>
+        <br/><br/>
+    </div>
+    <div class="login-box">
+        <h2>Your Questions Here</h2>
+        <form method="post" th:action="@{/}" th:object="${data}">
+            <div id="questions">
+                <th:block th:each="d : ${data}">
+                    <div class="input-group">
+                        <input name="input_question" type="text" class="form-control" size="60" th:value="${d}"/>
+                        <span class="input-group-btn">&nbsp;<button type="button" onclick="delete_question_onclick(this)">&nbsp;remove &nbsp;</button></span>
+                    </div>
+                </th:block>
+            </div>
+            <br/>
+            <button type="button" id="add-question" onclick="add_question_onclick()">Add Question</button>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div layout:fragment="scripts">
+    <script>
+        function add_question_onclick(){
+            console.log('abc');
+            $('#questions').append(
+                '<blockfilter>'+
+                '<div class="input-group">'+
+                '<input name="input_question" type="text" class="form-control" size="60"/>'+
+                '<span class="input-group-btn">'+
+                '&nbsp;<button type="button" onclick="delete_question_onclick(this)">&nbsp;remove &nbsp;</button>'+
+                '</span>'+
+                '</div>'+
+                '</blockfilter>'
+                );
+        }
+
+        function delete_question_onclick(e){
+             e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+        }
+
+
+    </script>
+</div>
+</body>
+</html>

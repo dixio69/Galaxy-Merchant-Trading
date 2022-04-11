@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{/template/template::head}">
+</head>
+<body>
+<div th:replace="~{/template/template::header}"></div>
+
+<div layout:fragment="content">The content goes here</div>
+
+<div th:replace="~{/template/template::footer}"></div>
+<div th:replace="~{/template/template::scripts}"></div>
+<div layout:fragment="scripts">The content goes here</div>
+</body>
+<!--<body><h3>Hahaha</h3></body>-->
+</html>
