@@ -14,8 +14,9 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Builder
 public class Question extends BaseEntity {
-    private long questionLong;
+    private double questionLong;
     private String questionStr;
     private String unit;
     private int index;
+    private String answer;
 }

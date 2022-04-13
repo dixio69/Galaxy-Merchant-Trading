@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -14,6 +16,8 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Builder
 public class Statement extends BaseEntity {
+    private String item;
     private String unit;
-    private long value;
+    @Column(precision = 10, scale = 2, columnDefinition="DECIMAL(10,2)")
+    private BigDecimal value;
 }
