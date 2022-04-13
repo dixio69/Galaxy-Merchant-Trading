@@ -19,7 +19,7 @@ public abstract class BaseSentenceProcessor {
     protected Services services;
     protected String sentence;
     protected String SENTENCE_DELIMITER = "is";
-    private String sessionId;
+    protected String sessionId;
 
     public void setSentence(String sentence) {
         this.sentence = sentence.toLowerCase();

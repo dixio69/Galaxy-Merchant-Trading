@@ -55,7 +55,7 @@ public class StatementService extends BaseSentenceProcessor {
         ROMAN_DIVIDER = "";
         Dictionary dictionary;
         for (int i = 0; i <= sentenceDelimiterIndex - 2; i++) {
-            dictionary = services.getDictionaryRepository().findByKeyword(words[i]);
+            dictionary = services.getDictionaryRepository().findByKeyword(words[i], sessionId);
             if (dictionary != null) {
                 ROMAN_DIVIDER += dictionary.getLetter();
             } else throw new UnregisteredDictionaryException(words[i]);
@@ -83,7 +83,7 @@ public class StatementService extends BaseSentenceProcessor {
     protected <T extends BaseEntity> T save(T t) {
         t = super.save(t);
         var data = (Statement) t;
-        var existingData = services.getStatementRepository().findByUnit(data.getUnit());
+        var existingData = services.getStatementRepository().findByUnitItem(data.getUnit(), data.getItem(), sessionId);
         if (existingData!=null)
             data.setId(existingData.getId());
         return (T) services.getStatementRepository().save(data);

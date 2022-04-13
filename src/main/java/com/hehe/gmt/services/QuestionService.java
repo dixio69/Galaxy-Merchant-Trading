@@ -59,15 +59,15 @@ public class QuestionService extends BaseSentenceProcessor {
         MULTIPLIER_STR = "";
         for (int i = sentenceDelimiterIndex + 1; i < words.length - 1; i++) {
             if (i < words.length - 1) {
-                dictionary = services.getDictionaryRepository().findByKeyword(words[i]);
+                dictionary = services.getDictionaryRepository().findByKeyword(words[i], sessionId);
                 if (dictionary != null) {
                     ROMAN_MULTIPLIER += dictionary.getLetter();
-                    MULTIPLIER_STR += words[i];
+                    MULTIPLIER_STR += words[i] + " ";
                 } else {
                     throw new UnknownWordException();
                 }
             } else {
-                statement = services.getStatementRepository().findByItem(words[i]);
+                statement = services.getStatementRepository().findByItem(words[i], sessionId);
                 if (statement != null && ITEM.equals("")) {
                     BASE_PRICE = statement.getValue();
                 } else if (statement != null && !ITEM.equals("")) {
@@ -81,11 +81,11 @@ public class QuestionService extends BaseSentenceProcessor {
         ROMAN_MULTIPLIER = "";
         MULTIPLIER_STR = "";
         Dictionary dictionary;
-        for (int i = sentenceDelimiterIndex + 1; i < words.length ; i++) {
-            dictionary = services.getDictionaryRepository().findByKeyword(words[i]);
+        for (int i = sentenceDelimiterIndex + 1; i < words.length; i++) {
+            dictionary = services.getDictionaryRepository().findByKeyword(words[i], sessionId);
             if (dictionary != null) {
                 ROMAN_MULTIPLIER += dictionary.getLetter();
-                MULTIPLIER_STR += words[i];
+                MULTIPLIER_STR += words[i] + " ";
             } else {
                 throw new UnknownWordException();
             }
@@ -106,13 +106,17 @@ public class QuestionService extends BaseSentenceProcessor {
         if (sentence.contains("much")) {
             setDictionaryStatementConverter();
             ARABIC_MULTIPLIER = RomanConverter.romanToAlphabetNumber(ROMAN_MULTIPLIER);
-            answer = sentenceConstructor(MULTIPLIER_STR, SENTENCE_DELIMITER, ARABIC_MULTIPLIER + "");
+            answer = sentenceConstructor(MULTIPLIER_STR.trim(), SENTENCE_DELIMITER, new BigDecimal(ARABIC_MULTIPLIER).toBigInteger().toString() + "");
         } else if (sentence.contains("many")) {
             setDictionaryStatementQuestion();
             ARABIC_MULTIPLIER = RomanConverter.romanToAlphabetNumber(ROMAN_MULTIPLIER);
             ITEM = words[words.length - 1];
             UNIT = words[sentenceDelimiterIndex - 1];
-            answer = sentenceConstructor(MULTIPLIER_STR, StringUtils.capitalize(ITEM), SENTENCE_DELIMITER, ARABIC_MULTIPLIER + "", UNIT);
+            Statement statement = services.getStatementRepository().findByUnitItem(UNIT, ITEM, sessionId);
+            BASE_PRICE = statement.getValue();
+
+            answer = sentenceConstructor(MULTIPLIER_STR.trim(), StringUtils.capitalize(ITEM), SENTENCE_DELIMITER,
+                    new BigDecimal(ARABIC_MULTIPLIER).multiply(BASE_PRICE).toBigInteger().toString(), UNIT);
         } else throw new UnknownWordException();
         save(Question.builder()
                 .questionLong(ARABIC_MULTIPLIER)

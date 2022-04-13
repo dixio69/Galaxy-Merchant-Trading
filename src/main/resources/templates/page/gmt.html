@@ -5,20 +5,21 @@
       layout:decorate="~{/layout/main-layout}">
 <body class="u-black u-body u-xl-mode">
 <div layout:fragment="content">
-    <div class="login-box">
+    <div>
         <h1>Welcome, Traders</h1>
         <p>Seems like our website is not feeling well today</p>
         <p>but don't worry, you can still trading</p>
         <br/><br/>
     </div>
-    <div class="login-box">
+    <div>
         <h2>Your Questions Here</h2>
         <form method="post" th:action="@{/}" th:object="${data}">
             <div id="questions">
                 <th:block th:each="d : ${data}">
                     <div class="input-group">
                         <input name="input_question" type="text" class="form-control" size="60" th:value="${d}"/>
-                        <span class="input-group-btn">&nbsp;<button type="button" onclick="delete_question_onclick(this)">&nbsp;remove &nbsp;</button></span>
+                        <span class="input-group-btn">&nbsp;<button type="button"
+                                                                    onclick="delete_question_onclick(this)">&nbsp;remove &nbsp;</button></span>
                     </div>
                 </th:block>
             </div>
@@ -26,6 +27,12 @@
             <button type="button" id="add-question" onclick="add_question_onclick()">Add Question</button>
             <button type="submit">Submit</button>
         </form>
+    </div>
+    <div th:if="${answers}">
+        <h2>The answers are</h2>
+        <th:block th:each="d : ${answers}">
+            <p th:text="${d}"></p>
+        </th:block>
     </div>
 </div>
 <div layout:fragment="scripts">
@@ -47,6 +54,7 @@
         function delete_question_onclick(e){
              e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
         }
+
 
 
     </script>

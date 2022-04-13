@@ -31,6 +31,8 @@ public class GmtApplicationTests {
     @Autowired
     private QuestionRepository questionRepository;
 
+    private String SESSION_ID = "Test";
+
     @Before
     public void loadDictionary() throws UnknownWordException {
         BaseSentenceProcessor.Services services = BaseSentenceProcessor.Services.builder()
@@ -53,15 +55,15 @@ public class GmtApplicationTests {
 
     @Test
     public void dictionaryTest() {
-        var dictionary = dictionaryRepository.findByLetter("L");
+        var dictionary = dictionaryRepository.findByLetter("L", SESSION_ID);
         Assertions.assertThat(dictionary.getKeyword().equals("glup"));
-        dictionary = dictionaryRepository.findByKeyword("glup");
+        dictionary = dictionaryRepository.findByKeyword("glup", SESSION_ID);
         assert (dictionary.getLetter().equals("L"));
     }
 
     @Test
     public void sentenceTest() throws UnknownWordException {
-        var sentence = statementRepository.findByItem("silver");
+        var sentence = statementRepository.findByItem("silver", SESSION_ID);
         assert (sentence.getValue().compareTo(new BigDecimal(2)) == 0);
     }
 

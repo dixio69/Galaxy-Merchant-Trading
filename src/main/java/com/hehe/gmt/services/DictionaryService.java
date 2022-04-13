@@ -40,7 +40,7 @@ public class DictionaryService extends BaseSentenceProcessor {
     protected <T extends BaseEntity> T save(T t) {
         t = super.save(t);
         var data = (Dictionary) t;
-        var existingData = services.getDictionaryRepository().findByKeyword(data.getKeyword());
+        var existingData = services.getDictionaryRepository().findByKeyword(data.getKeyword(), sessionId);
         if (existingData!=null)
             data.setId(existingData.getId());
         return (T) services.getDictionaryRepository().save(data);
