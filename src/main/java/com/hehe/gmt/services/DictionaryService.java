@@ -6,6 +6,7 @@ import com.hehe.gmt.entities.Dictionary;
 import com.hehe.gmt.entities.Statement;
 import com.hehe.gmt.enumerations.RomanEnum;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -15,6 +16,7 @@ public class DictionaryService extends BaseSentenceProcessor {
 
     @Override
     public boolean isValidSentence() {
+        sentence = StringUtils.normalizeSpace(sentence);
         words = sentence.split(" ");
         if (words.length == 3)
             roman = RomanEnum.getByLetter(words[2].toUpperCase());

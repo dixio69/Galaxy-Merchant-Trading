@@ -33,7 +33,7 @@ public class GmtApplicationTests {
 
     private String SESSION_ID = "Test";
     private String DICTIONARY = "glip";
-    private String DICTIONARY_ROMAN = "L";
+    private String DICTIONARY_ROMAN = "I";
     private BigDecimal DICTIONARY_NUMERAL = new BigDecimal(50);
     private String SENTENCE_ITEM = "silver";
     private BigDecimal SENTENCE_VALUE = new BigDecimal("40");
@@ -93,7 +93,7 @@ public class GmtApplicationTests {
         questionProcessor = new QuestionService();
         questionProcessor.setServices(services);
         questionProcessor.setSessionId(SESSION_ID);
-        questionProcessor.setSentence("how many " + UNIT + " is " + DICTIONARY + " " + SENTENCE_ITEM + "?");
+        questionProcessor.setSentence("how many " + UNIT + " is " + " glip glip glip glip"+ " " + SENTENCE_ITEM + "?");
         if (questionProcessor.isValidSentence())
             questionProcessor.process();
 

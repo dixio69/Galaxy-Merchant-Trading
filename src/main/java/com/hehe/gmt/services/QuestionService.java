@@ -7,10 +7,12 @@ import com.hehe.gmt.entities.Question;
 import com.hehe.gmt.entities.Statement;
 import com.hehe.gmt.exceptions.UnknownWordException;
 import com.hehe.gmt.utils.RomanConverter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 
+@Log4j2
 public class QuestionService extends BaseSentenceProcessor {
     private String[] words;
     private String ITEM;
@@ -25,6 +27,7 @@ public class QuestionService extends BaseSentenceProcessor {
 
     @Override
     public boolean isValidSentence() {
+        sentence = StringUtils.normalizeSpace(sentence);
         words = sentence.replace("?", "").split(" ");
         boolean isValidSentence = sentence.contains(SENTENCE_DELIMITER)
                 && sentence.contains("?")
@@ -59,6 +62,7 @@ public class QuestionService extends BaseSentenceProcessor {
         MULTIPLIER_STR = "";
         for (int i = sentenceDelimiterIndex + 1; i < words.length - 1; i++) {
             if (i < words.length - 1) {
+                log.info("Processing dictionary : " + words[i]);
                 dictionary = services.getDictionaryRepository().findByKeyword(words[i], sessionId);
                 if (dictionary != null) {
                     ROMAN_MULTIPLIER += dictionary.getLetter();
@@ -67,6 +71,7 @@ public class QuestionService extends BaseSentenceProcessor {
                     throw new UnknownWordException();
                 }
             } else {
+                log.info("Processing statement : " + words[i]);
                 statement = services.getStatementRepository().findByItem(words[i], sessionId);
                 if (statement != null && ITEM.equals("")) {
                     BASE_PRICE = statement.getValue();

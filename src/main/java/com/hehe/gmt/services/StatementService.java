@@ -22,6 +22,7 @@ public class StatementService extends BaseSentenceProcessor {
 
     @Override
     public boolean isValidSentence() {
+        sentence = StringUtils.normalizeSpace(sentence);
         words = sentence.split(" ");
         boolean isValidSentence = sentence.contains(SENTENCE_DELIMITER)
                 && !sentence.contains("?")
