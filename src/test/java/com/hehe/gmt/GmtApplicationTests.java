@@ -32,6 +32,12 @@ public class GmtApplicationTests {
     private QuestionRepository questionRepository;
 
     private String SESSION_ID = "Test";
+    private String DICTIONARY = "glip";
+    private String DICTIONARY_ROMAN = "L";
+    private BigDecimal DICTIONARY_NUMERAL = new BigDecimal(50);
+    private String SENTENCE_ITEM = "silver";
+    private BigDecimal SENTENCE_VALUE = new BigDecimal("40");
+    private String UNIT = "credits";
 
     @Before
     public void loadDictionary() throws UnknownWordException {
@@ -42,12 +48,14 @@ public class GmtApplicationTests {
                 .build();
         BaseSentenceProcessor sentenceProcessor = new DictionaryService();
         sentenceProcessor.setServices(services);
-        sentenceProcessor.setSentence("glup is L");
+        sentenceProcessor.setSessionId(SESSION_ID);
+        sentenceProcessor.setSentence(DICTIONARY + " is " + DICTIONARY_ROMAN);
         sentenceProcessor.isValidSentence();
 
         sentenceProcessor = new StatementService();
         sentenceProcessor.setServices(services);
-        sentenceProcessor.setSentence("glup silver is 100 credits");
+        sentenceProcessor.setSessionId(SESSION_ID);
+        sentenceProcessor.setSentence(DICTIONARY + " " + SENTENCE_ITEM + " is " + SENTENCE_VALUE.toString() + " " + UNIT);
         if (sentenceProcessor.isValidSentence()) {
             sentenceProcessor.process();
         }
@@ -55,16 +63,16 @@ public class GmtApplicationTests {
 
     @Test
     public void dictionaryTest() {
-        var dictionary = dictionaryRepository.findByLetter("L", SESSION_ID);
-        Assertions.assertThat(dictionary.getKeyword().equals("glup"));
-        dictionary = dictionaryRepository.findByKeyword("glup", SESSION_ID);
-        assert (dictionary.getLetter().equals("L"));
+        var dictionary = dictionaryRepository.findByLetter(DICTIONARY_ROMAN, SESSION_ID);
+        Assertions.assertThat(dictionary.getKeyword().equals(DICTIONARY));
+        dictionary = dictionaryRepository.findByKeyword(DICTIONARY, SESSION_ID);
+        assert (dictionary.getLetter().equals(DICTIONARY_ROMAN));
     }
 
     @Test
     public void sentenceTest() throws UnknownWordException {
-        var sentence = statementRepository.findByItem("silver", SESSION_ID);
-        assert (sentence.getValue().compareTo(new BigDecimal(2)) == 0);
+        var sentence = statementRepository.findByItem(SENTENCE_ITEM, SESSION_ID);
+        assert (sentence.getValue().compareTo(SENTENCE_VALUE.divide(DICTIONARY_NUMERAL)) == 0);
     }
 
     @Test
@@ -76,14 +84,16 @@ public class GmtApplicationTests {
                 .build();
         BaseSentenceProcessor questionProcessor = new QuestionService();
         questionProcessor.setServices(services);
-        questionProcessor.setSentence("how much is glup?");
+        questionProcessor.setSessionId(SESSION_ID);
+        questionProcessor.setSentence("how much is " + DICTIONARY + "?");
         if (questionProcessor.isValidSentence())
             questionProcessor.process();
 
         var x = questionRepository.findAll();
         questionProcessor = new QuestionService();
         questionProcessor.setServices(services);
-        questionProcessor.setSentence("how many credits is glup silver?");
+        questionProcessor.setSessionId(SESSION_ID);
+        questionProcessor.setSentence("how many " + UNIT + " is " + DICTIONARY + " " + SENTENCE_ITEM + "?");
         if (questionProcessor.isValidSentence())
             questionProcessor.process();
 

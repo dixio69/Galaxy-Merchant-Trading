@@ -5,8 +5,10 @@ import com.hehe.gmt.base.BaseSentenceProcessor;
 import com.hehe.gmt.entities.Dictionary;
 import com.hehe.gmt.entities.Statement;
 import com.hehe.gmt.enumerations.RomanEnum;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 public class DictionaryService extends BaseSentenceProcessor {
     private RomanEnum roman = null;
     private String[] words;
@@ -38,6 +40,7 @@ public class DictionaryService extends BaseSentenceProcessor {
 
     @Override
     protected <T extends BaseEntity> T save(T t) {
+        log.info("Saving Dictionary "+((Dictionary)t).toString());
         t = super.save(t);
         var data = (Dictionary) t;
         var existingData = services.getDictionaryRepository().findByKeyword(data.getKeyword(), sessionId);
