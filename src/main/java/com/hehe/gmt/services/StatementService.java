@@ -89,4 +89,9 @@ public class StatementService extends BaseSentenceProcessor {
             data.setId(existingData.getId());
         return (T) services.getStatementRepository().save(data);
     }
+
+//    @Override
+//    public void saveUnknownSentence() {
+//        super.saveUnknownSentence(this.index);
+//    }
 }

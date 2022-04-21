@@ -48,6 +48,7 @@ public class GmtService {
                 sentenceProcessor.setSessionId(sessionId);
                 sentenceProcessor.setServices(services);
                 sentenceProcessor.setSentence(s);
+                sentenceProcessor.setIndex(questionIndex);
                 if (sentenceProcessor.isValidSentence()) {
                     statementServices.add((StatementService) sentenceProcessor);
                 } else {
@@ -55,52 +56,53 @@ public class GmtService {
                     sentenceProcessor.setSessionId(sessionId);
                     sentenceProcessor.setServices(services);
                     sentenceProcessor.setSentence(s);
+                    sentenceProcessor.setIndex(questionIndex);
                     if (sentenceProcessor.isValidSentence()) {
-                        ((QuestionService) sentenceProcessor).setIndex(questionIndex);
                         questionServices.add((QuestionService) sentenceProcessor);
-                        questionIndex++;
-                    }else {
-                        answer.add(unknownSentenceHandler());
+                    } else {
+                        sentenceProcessor.saveUnknownSentence();
                     }
                 }
+                questionIndex++;
             }
         }
 
-        for (StatementService ss :
-                statementServices) {
+        for (StatementService ss : statementServices) {
             try {
                 ss.process();
-            } catch (UnknownWordException e) {
-                answer.add(unknownSentenceHandler());
+            } catch (NullPointerException | UnknownWordException e) {
+                ss.saveUnknownSentence();
             }
         }
 
         var statements = statementRepository.findAll();
         System.out.println(statements);
 
-        for (QuestionService qs :
-                questionServices) {
+        for (QuestionService qs : questionServices) {
             try {
+
+//                if (qs.isValidSentence()) {
                 qs.process();
-            } catch (UnknownWordException e) {
-                answer.add(unknownSentenceHandler());
+//                } else qs.saveUnknownSentence();
+            } catch (NullPointerException | UnknownWordException e) {
+                qs.saveUnknownSentence();
             }
         }
 
-        questionRepository.findAllBySessionId(sessionId).stream().forEach(d->{
+        questionRepository.findAllBySessionId(sessionId).stream().forEach(d -> {
             answer.add(d.getAnswer());
         });
 
         return answer;
     }
 
-    private void removeAllBySessionid(String sessionId){
+    private void removeAllBySessionid(String sessionId) {
         questionRepository.deleteBySessionId(sessionId);
         dictionaryRepository.deleteBySessionId(sessionId);
         statementRepository.deleteBySessionId(sessionId);
     }
 
-    private String unknownSentenceHandler(){
+    public static String unknownSentenceHandler() {
         return "I have no idea what you are talking about";
     }
 }

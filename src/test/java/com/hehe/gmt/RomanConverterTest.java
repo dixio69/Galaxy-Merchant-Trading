@@ -1,10 +1,8 @@
 package com.hehe.gmt;
 
-import com.hehe.gmt.utils.RC2;
 import com.hehe.gmt.utils.RomanConverter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 class RomanConverterTest {
 

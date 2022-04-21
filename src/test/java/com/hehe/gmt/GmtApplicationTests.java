@@ -100,5 +100,4 @@ public class GmtApplicationTests {
         x = questionRepository.findAll();
         System.out.println(x);
     }
-
 }

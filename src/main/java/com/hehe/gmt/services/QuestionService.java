@@ -23,7 +23,6 @@ public class QuestionService extends BaseSentenceProcessor {
     private double ARABIC_MULTIPLIER;
     private BigDecimal BASE_PRICE;
     private int sentenceDelimiterIndex;
-    private int index;
 
     @Override
     public boolean isValidSentence() {
@@ -137,4 +136,9 @@ public class QuestionService extends BaseSentenceProcessor {
         t = super.save(t);
         return (T) services.getQuestionRepository().save((Question) t);
     }
+
+//    @Override
+//    public void saveUnknownSentence() {
+//        super.saveUnknownSentence(this.index);
+//    }
 }
